@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import fakeData from '../../fakeData';
+// import fakeData from '../../fakeData';
 import { getDatabaseCart, processOrder, removeFromDatabaseCart } from '../../utilities/databaseManager';
 import Cart from '../Cart/Cart';
 import ReviewItem from '../ReviewItem/ReviewItem';
 import happyImage from '../../images/giphy.gif';
+import { useHistory } from 'react-router';
 
 const Review = () => {
     const [cart , setCart] = useState([]);
     const [orderPlaced, setOrderPlaced] = useState(false);
-    const handelPlaceOrder = () =>{
-        setCart([]);
-        setOrderPlaced(true);
-        processOrder();
+
+    const history = useHistory();
+    const handelProceedCheckout = () =>{
+        
+        history.push('/shipment');
+     
+     
+        // setCart([]);
+        // setOrderPlaced(true);
+        // processOrder();
     }
 
     const removeProduct = (productkey) => {
@@ -24,14 +31,26 @@ const Review = () => {
 
         const savedCart = getDatabaseCart();
         const productKeys = Object.keys(savedCart);
-         const cartProducts=  productKeys.map(key => {
-         const product = fakeData.find(pd=> pd.key === key);
-         product.quantity = savedCart[key];
-         return product;
-        });
-        // console.log(cartProducts);
-        setCart(cartProducts);
-    }, [])
+
+        fetch('http://localhost:4000/productsByKeys', {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(productKeys)
+        })
+        .then(response =>response.json())
+        .then(data=>setCart(data))
+
+   
+        //  const cartProducts=  productKeys.map(key => {
+        //  const product = fakeData.find(pd=> pd.key === key);
+        //  product.quantity = savedCart[key];
+        //  return product;
+        // });
+        // // console.log(cartProducts);
+        // setCart(cartProducts);
+    }, []);
 
     let thankyou;
     if(orderPlaced){
@@ -51,7 +70,7 @@ const Review = () => {
            </div>
            <div className = "cart-container">
             <Cart cart={cart}>
-                <button onClick={handelPlaceOrder} className= "main-button">Place Order</button>
+                <button onClick={handelProceedCheckout} className= "main-button">Proceed Checkout</button>
             </Cart>
            </div>
         </div>
