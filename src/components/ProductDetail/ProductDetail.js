@@ -14,7 +14,7 @@ const ProductDetail = () => {
     // }, [productKey])
 
     useEffect(()=>{
-        fetch('http://localhost:4000/product/' + productKey)
+        fetch('https://still-bayou-67979.herokuapp.com/product/' + productKey)
         .then(res=>res.json())
         .then(data=> setProduct(data))
     }, [productKey])
@@ -23,7 +23,7 @@ const ProductDetail = () => {
     console.log(product);
     return (
         <div>
-            <h3>{productKey} Product Detail Coming soon</h3>
+            {/* <h3>{productKey} Product Detail Coming soon</h3> */}
             <Product showAddtoCart = {false} product={product}></Product>
         </div>
     );

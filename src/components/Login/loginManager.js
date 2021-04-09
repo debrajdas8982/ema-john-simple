@@ -22,6 +22,9 @@ export const handelGoogleSignIn = () => {
           photo: photoURL,
           success: true
         }
+
+        setUserToken();
+        
         return signedInUser;
         // console.log(email, displayName, photoURL);
         // const credential = result.credential;
@@ -29,6 +32,15 @@ export const handelGoogleSignIn = () => {
       .catch(err => {
 
       })
+  }
+
+
+  const setUserToken = ()=>{
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+      sessionStorage.setItem('token', idToken);
+    }).catch(function(error) {
+      // Handle error
+    });
   }
 
  export const handelFbSignIn = () => {
